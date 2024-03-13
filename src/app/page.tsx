@@ -2,13 +2,13 @@ import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
 import { CreatePost } from "~/app/_components/create-post";
-import { getServerAuthSession } from "~/server/auth";
+import { auth } from "~/server/auth";
 import { api } from "~/trpc/server";
 
 export default async function Home() {
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
-  const session = await getServerAuthSession();
+  const session = await auth();
    console.log(session?.user)
   
 
@@ -42,7 +42,7 @@ export default async function Home() {
 }
 
 async function CrudShowcase() {
-  const session = await getServerAuthSession();
+  const session = await auth();
   if (!session?.user) return null;
 
  else if(!session.user.roles.includes('Admin')){
